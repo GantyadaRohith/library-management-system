@@ -1,0 +1,168 @@
+/* FilterPanel Styles */
+.filterPanel {
+  background: white;
+  border: 1px solid var(--border-color, #e1e5e9);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.filterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: var(--gray-50, #F9FAFB);
+  border-bottom: 1px solid var(--border-color, #e1e5e9);
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color, #333);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  transition: color 0.2s ease;
+}
+
+.toggleButton:hover {
+  color: var(--primary-color, #4A90E2);
+}
+
+.toggleButton.expanded {
+  color: var(--primary-color, #4A90E2);
+}
+
+.clearButton {
+  background: var(--danger-color, #EF4444);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clearButton:hover {
+  background: var(--danger-color-dark, #DC2626);
+}
+
+.loading {
+  padding: 1rem 1.25rem;
+  color: var(--gray-500, #6B7280);
+  text-align: center;
+}
+
+.filterContent {
+  padding: 1.25rem;
+}
+
+.filterSection {
+  margin-bottom: 1.5rem;
+}
+
+.filterSection:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color, #333);
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.filterLabel {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color, #333);
+  font-size: 0.875rem;
+}
+
+.filterSelect {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color, #e1e5e9);
+  border-radius: 6px;
+  background: white;
+  font-size: 0.875rem;
+  color: var(--text-color, #333);
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: var(--primary-color, #4A90E2);
+  box-shadow: 0 0 0 3px var(--primary-color-alpha, rgba(74, 144, 226, 0.1));
+}
+
+.filterSelect:hover {
+  border-color: var(--gray-400, #9CA3AF);
+}
+
+/* Sort Controls */
+.sortControls {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1rem;
+}
+
+.sortGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .filterGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .sortControls {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .filterHeader {
+    padding: 0.75rem 1rem;
+  }
+  
+  .filterContent {
+    padding: 1rem;
+  }
+  
+  .filterSection {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .filterHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .clearButton {
+    width: 100%;
+    justify-self: stretch;
+  }
+}

@@ -1,0 +1,265 @@
+/* OverdueManagement Styles */
+.loading {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--gray-500, #6B7280);
+}
+
+.loadingIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* Statistics Grid */
+.statisticsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: var(--white, #FFFFFF);
+  border: 2px solid var(--gray-200, #E5E7EB);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statCard.warning {
+  border-color: #F59E0B;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FFFFFF 100%);
+}
+
+.statCard.info {
+  border-color: #3B82F6;
+  background: linear-gradient(135deg, #DBEAFE 0%, #FFFFFF 100%);
+}
+
+.statCard.danger {
+  border-color: #EF4444;
+  background: linear-gradient(135deg, #FEE2E2 0%, #FFFFFF 100%);
+}
+
+.statNumber {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--gray-800, #1F2937);
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gray-600, #4B5563);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.actionButtons .btn {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* Configuration Info */
+.configInfo {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  background: var(--gray-50, #F9FAFB);
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--gray-200, #E5E7EB);
+}
+
+.configItem {
+  font-size: 0.875rem;
+  color: var(--gray-700, #374151);
+}
+
+/* Sections */
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--gray-800, #1F2937);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--gray-200, #E5E7EB);
+}
+
+/* Book List */
+.bookList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bookItem {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1.5rem;
+  align-items: start;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid;
+  background: var(--white, #FFFFFF);
+  transition: all 0.2s ease;
+}
+
+.bookItem:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.bookItem.overdue {
+  border-color: #EF4444;
+  background: linear-gradient(135deg, #FEE2E2 0%, #FFFFFF 100%);
+}
+
+.bookItem.dueSoon {
+  border-color: #F59E0B;
+  background: linear-gradient(135deg, #FEF3C7 0%, #FFFFFF 100%);
+}
+
+/* Book Info */
+.bookInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bookTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--gray-800, #1F2937);
+}
+
+.studentName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-700, #374151);
+}
+
+.studentEmail {
+  font-size: 0.875rem;
+  color: var(--gray-600, #4B5563);
+  font-family: monospace;
+}
+
+/* Due Date Section */
+.dueDateSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.actions .btn {
+  min-width: 140px;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+}
+
+/* No Issues */
+.noIssues {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #D1FAE5 0%, #FFFFFF 100%);
+  border-radius: 12px;
+  border: 2px solid #10B981;
+}
+
+.noIssuesIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.noIssues h3 {
+  color: var(--gray-800, #1F2937);
+  margin-bottom: 0.5rem;
+}
+
+.noIssues p {
+  color: var(--gray-600, #4B5563);
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .bookItem {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dueDateSection {
+    align-items: flex-start;
+  }
+  
+  .actions {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 768px) {
+  .statisticsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+  }
+  
+  .configInfo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .actions .btn {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .statisticsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bookItem {
+    padding: 1rem;
+  }
+}

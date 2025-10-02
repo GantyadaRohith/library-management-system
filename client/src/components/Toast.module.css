@@ -1,0 +1,21 @@
+.toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: #2d3748;
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  font-size: 1.1rem;
+  z-index: 9999;
+  animation: fadein 0.3s, fadeout 0.3s 2.7s;
+}
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeout {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

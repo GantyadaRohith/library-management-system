@@ -1,0 +1,8 @@
+- [x] Project requirements clarified: React frontend, Express backend, MongoDB database, student/librarian accounts, book listing, request queue, email notifications.
+- [x] Project scaffolded: `/client` and `/server` folders created, README files added, package.json initialized for both frontend and backend.
+- [ ] Customize the project: Next, set up initial backend and frontend boilerplate, MongoDB connection, and authentication models.
+- [ ] Install required extensions: None specified yet.
+- [ ] Compile the project: Will run install and build steps after boilerplate is added.
+- [ ] Create and run task: Will add tasks.json if needed.
+- [ ] Launch the project: Will provide instructions after setup.
+- [ ] Ensure documentation is complete: Will update README and copilot-instructions.md after setup.

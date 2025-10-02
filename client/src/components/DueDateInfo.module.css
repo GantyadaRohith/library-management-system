@@ -1,0 +1,111 @@
+/* DueDateInfo Styles */
+.dueDateInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  width: fit-content;
+  transition: all 0.2s ease;
+}
+
+.icon {
+  font-size: 1rem;
+}
+
+.text {
+  white-space: nowrap;
+}
+
+/* Status Types */
+.normal {
+  background: var(--gray-100, #F3F4F6);
+  color: var(--gray-700, #374151);
+  border: 1px solid var(--gray-300, #D1D5DB);
+}
+
+.due-soon {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #F59E0B;
+}
+
+.due-today {
+  background: #FECACA;
+  color: #991B1B;
+  border: 1px solid #EF4444;
+}
+
+.overdue {
+  background: #FEE2E2;
+  color: #991B1B;
+  border: 1px solid #DC2626;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+/* Details Section */
+.details {
+  background: var(--gray-50, #F9FAFB);
+  border-radius: 8px;
+  padding: 0.75rem;
+  border: 1px solid var(--gray-200, #E5E7EB);
+  font-size: 0.875rem;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.detailRow:not(:last-child) {
+  border-bottom: 1px solid var(--gray-200, #E5E7EB);
+}
+
+.label {
+  font-weight: 500;
+  color: var(--gray-600, #4B5563);
+}
+
+.value {
+  color: var(--gray-800, #1F2937);
+  font-weight: 500;
+}
+
+.lateFee {
+  color: var(--error-red, #DC2626);
+  font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .statusBadge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .details {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .detailRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
+  }
+}

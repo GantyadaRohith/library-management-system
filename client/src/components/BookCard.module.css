@@ -1,0 +1,39 @@
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 20px 24px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 4px 24px rgba(102,126,234,0.18);
+}
+.title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 6px;
+}
+.author {
+  color: #764ba2;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+.button {
+  padding: 8px 16px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.button:hover {
+  background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+}
