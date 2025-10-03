@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "cd client && npm install && npm run build",
-    "build:netlify": "npm run install-all && cd client && npm run build",
+    "build:netlify": "cd client && npm ci && npx react-scripts build",
     "start": "cd client && npm start",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
