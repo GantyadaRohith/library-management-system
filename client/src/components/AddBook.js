@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 function AddBook({ onAdd, showToast }) {
   const [title, setTitle] = useState('');
@@ -28,10 +28,7 @@ function AddBook({ onAdd, showToast }) {
         publisher
       };
       
-      await axios.post('http://localhost:5000/api/books', 
-        bookData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post('/api/books', bookData);
       
       // Reset form
       setTitle('');

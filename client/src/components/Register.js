@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 function Register({ onRegister }) {
   const [name, setName] = useState('');
@@ -14,7 +14,7 @@ function Register({ onRegister }) {
     setError('');
     setSuccess('');
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await api.post('/api/auth/register', {
         name, email, password, role
       });
       setSuccess('Registration successful! You can now log in.');

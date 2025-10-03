@@ -1,7 +1,6 @@
 const express = require('express');
 const Book = require('../models/Book');
 const { authenticateToken, requireRole } = require('../middleware/auth');
-const { requireLibrarian } = require('../middleware/roleAuth');
 const { validateBook } = require('../middleware/validation');
 const router = express.Router();
 
@@ -168,7 +167,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 // Librarian: Add a new book
-router.post('/', requireLibrarian, validateBook, async (req, res) => {
+router.post('/', authenticateToken, requireRole('librarian'), validateBook, async (req, res) => {
   const { title, author } = req.body;
   try {
     const book = new Book({ title, author });

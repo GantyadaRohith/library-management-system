@@ -4,12 +4,11 @@ const Book = require('../models/Book');
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
 const { authenticateToken, requireRole } = require('../middleware/auth');
-const { requireLibrarian } = require('../middleware/roleAuth');
 const dueDateService = require('../services/dueDateService');
 const router = express.Router();
 
-// Get all requests (for librarians and admins)
-router.get('/', requireLibrarian, async (req, res) => {
+// Get all requests (for librarians)
+router.get('/', authenticateToken, requireRole('librarian'), async (req, res) => {
   try {
     const requests = await Request.find({ status: { $ne: 'returned' } })
       .populate('student', 'name email')
@@ -54,7 +53,7 @@ router.post('/', authenticateToken, requireRole('student'), async (req, res) => 
 });
 
 // Librarian: Accept a request
-router.post('/accept', requireLibrarian, async (req, res) => {
+router.post('/accept', authenticateToken, requireRole('librarian'), async (req, res) => {
   const { requestId } = req.body;
   try {
     const request = await Request.findById(requestId).populate('student book');
@@ -86,7 +85,7 @@ router.post('/accept', requireLibrarian, async (req, res) => {
 });
 
 // Librarian: Send resubmission email
-router.post('/notify', requireLibrarian, async (req, res) => {
+router.post('/notify', authenticateToken, requireRole('librarian'), async (req, res) => {
   const { requestId } = req.body;
   try {
     const request = await Request.findById(requestId).populate('student book');
@@ -114,7 +113,7 @@ router.post('/notify', requireLibrarian, async (req, res) => {
 });
 
 // Librarian: Mark book as returned
-router.post('/return', requireLibrarian, async (req, res) => {
+router.post('/return', authenticateToken, requireRole('librarian'), async (req, res) => {
   const { requestId } = req.body;
   try {
     console.log('Return request received for requestId:', requestId);
@@ -194,7 +193,7 @@ router.get('/my-requests', authenticateToken, requireRole('student'), async (req
 });
 
 // Librarian: Get overdue books
-router.get('/overdue', requireLibrarian, async (req, res) => {
+router.get('/overdue', authenticateToken, requireRole('librarian'), async (req, res) => {
   try {
     const overdueRequests = await dueDateService.getOverdueRequests();
     res.json(overdueRequests);
@@ -205,7 +204,7 @@ router.get('/overdue', requireLibrarian, async (req, res) => {
 });
 
 // Librarian: Get books due soon
-router.get('/due-soon', requireLibrarian, async (req, res) => {
+router.get('/due-soon', authenticateToken, requireRole('librarian'), async (req, res) => {
   try {
     const dueSoonRequests = await dueDateService.getRequestsDueSoon();
     res.json(dueSoonRequests);
@@ -216,7 +215,7 @@ router.get('/due-soon', requireLibrarian, async (req, res) => {
 });
 
 // Librarian: Send manual reminder for a specific request
-router.post('/send-reminder', requireLibrarian, async (req, res) => {
+router.post('/send-reminder', authenticateToken, requireRole('librarian'), async (req, res) => {
   const { requestId, reminderType = 'overdue' } = req.body;
   try {
     const request = await Request.findById(requestId)
@@ -247,7 +246,7 @@ router.post('/send-reminder', requireLibrarian, async (req, res) => {
 });
 
 // Librarian: Update overdue status for all active requests
-router.post('/update-overdue', requireLibrarian, async (req, res) => {
+router.post('/update-overdue', authenticateToken, requireRole('librarian'), async (req, res) => {
   try {
     const updatedRequests = await dueDateService.updateAllOverdueStatuses();
     res.json({ 
@@ -261,7 +260,7 @@ router.post('/update-overdue', requireLibrarian, async (req, res) => {
 });
 
 // Librarian: Process all reminder emails (can be called manually or by cron)
-router.post('/process-reminders', requireLibrarian, async (req, res) => {
+router.post('/process-reminders', authenticateToken, requireRole('librarian'), async (req, res) => {
   try {
     const summary = await dueDateService.processAllReminders();
     res.json({
@@ -275,7 +274,7 @@ router.post('/process-reminders', requireLibrarian, async (req, res) => {
 });
 
 // Get due date statistics (for dashboard)
-router.get('/statistics', requireLibrarian, async (req, res) => {
+router.get('/statistics', authenticateToken, requireRole('librarian'), async (req, res) => {
   try {
     await dueDateService.updateAllOverdueStatuses();
     

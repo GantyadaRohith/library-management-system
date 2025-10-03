@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] 
+    ? [process.env.FRONTEND_URL || 'https://your-app-name.vercel.app'] 
     : ['http://localhost:3000'],
   credentials: true
 }));

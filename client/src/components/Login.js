@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { API_BASE_URL } from '../utils/api';
 
 function Login({ setUser }) {
   const [email, setEmail] = useState('');
@@ -9,9 +9,15 @@ function Login({ setUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      setUser(res.data.user);
-      localStorage.setItem('token', res.data.token);
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      setUser(data.user);
+      localStorage.setItem('token', data.token);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
