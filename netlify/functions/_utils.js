@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
-let cachedConnection = null;
+let isConnected = false;
 
 const connectToDatabase = async () => {
-  if (cachedConnection && mongoose.connection.readyState === 1) {
-    return cachedConnection;
+  if (isConnected && mongoose.connection.readyState === 1) {
+    console.log('Using existing MongoDB connection');
+    return;
   }
 
   try {
@@ -14,18 +15,21 @@ const connectToDatabase = async () => {
       throw new Error('MONGO_URI environment variable is not defined');
     }
 
-    const connection = await mongoose.connect(MONGO_URI, {
+    console.log('Connecting to MongoDB...');
+    
+    await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
     });
 
-    cachedConnection = connection;
-    console.log('Connected to MongoDB');
-    return connection;
+    isConnected = true;
+    console.log('Connected to MongoDB successfully');
+    
   } catch (error) {
     console.error('MongoDB connection error:', error);
+    isConnected = false;
     throw error;
   }
 };

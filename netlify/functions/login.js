@@ -3,9 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // Import models
-require('../../server/models/User');
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const User = require('./models/User');
 
 exports.handler = async (event, context) => {
   // Handle CORS preflight
