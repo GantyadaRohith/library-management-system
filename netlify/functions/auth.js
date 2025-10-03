@@ -15,12 +15,17 @@ exports.handler = async (event, context) => {
   try {
     await connectToDatabase();
 
-    const path = event.path.replace('/.netlify/functions/auth', '');
     const method = event.httpMethod;
     const body = event.body ? JSON.parse(event.body) : {};
+    const queryParams = event.queryStringParameters || {};
+    
+    // Get the action from query params or body
+    const action = queryParams.action || body.action || 'register';
 
-    // Route: POST /register
-    if (path === '/register' && method === 'POST') {
+    console.log('Auth function called:', { method, action, path: event.path });
+
+    // Route: POST /register (default action)
+    if (method === 'POST' && (action === 'register' || event.path.includes('register') || !action || action === 'register')) {
       const { name, email, password, role } = body;
 
       // Validation
