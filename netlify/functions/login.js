@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
   requestedRole: {
     type: String,
     enum: ['librarian'],
-    default: null
+    required: false
   },
   createdAt: {
     type: Date,

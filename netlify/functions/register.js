@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
   requestedRole: {
     type: String,
     enum: ['librarian'],
-    default: null
+    required: false
   },
   createdAt: {
     type: Date,
@@ -97,25 +97,29 @@ exports.handler = async (event, context) => {
     
     let userStatus = 'active';
     let userRole = role;
-    let requestedRole = null;
 
     // If registering as librarian, require admin approval
     if (role === 'librarian') {
       userStatus = 'pending';
       userRole = 'student';
-      requestedRole = 'librarian';
     }
 
     console.log('Creating user...');
-    const user = new User({ 
+    const userData = { 
       name, 
       email, 
       password: hashedPassword, 
       role: userRole,
       status: userStatus,
-      requestedRole: requestedRole,
       createdAt: new Date()
-    });
+    };
+
+    // Only add requestedRole if it's a librarian request
+    if (role === 'librarian') {
+      userData.requestedRole = 'librarian';
+    }
+
+    const user = new User(userData);
 
     await user.save();
     console.log('User saved successfully');
