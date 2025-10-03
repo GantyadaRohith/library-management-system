@@ -2,9 +2,7 @@ const { connectToDatabase, handleCors, createResponse } = require('./_utils');
 const jwt = require('jsonwebtoken');
 
 // Import models
-require('../../server/models/Book');
-const mongoose = require('mongoose');
-const Book = mongoose.model('Book');
+const Book = require('./models/Book');
 
 // Authentication middleware
 const authenticateToken = (token) => {
