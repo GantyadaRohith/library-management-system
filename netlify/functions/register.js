@@ -1,8 +1,52 @@
 const { connectToDatabase, handleCors, createResponse } = require('./_utils');
 const bcrypt = require('bcryptjs');
+const mongoose = require('mongoose');
 
-// Import models
-const User = require('./models/User');
+// Define User schema directly in the function
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6
+  },
+  role: {
+    type: String,
+    enum: ['student', 'librarian'],
+    default: 'student'
+  },
+  status: {
+    type: String,
+    enum: ['active', 'suspended', 'pending'],
+    default: 'active'
+  },
+  requestedRole: {
+    type: String,
+    enum: ['librarian'],
+    default: null
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  lastLogin: {
+    type: Date
+  }
+});
+
+// Get or create User model
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 exports.handler = async (event, context) => {
   console.log('Register function started');
