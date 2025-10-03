@@ -50,6 +50,8 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 exports.handler = async (event, context) => {
+  console.log('Login function started');
+  
   // Handle CORS preflight
   const corsResponse = handleCors(event);
   if (corsResponse) return corsResponse;
@@ -59,26 +61,37 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    console.log('Connecting to database...');
     await connectToDatabase();
+    console.log('Database connected');
 
     const body = event.body ? JSON.parse(event.body) : {};
     const { email, password } = body;
 
-    console.log('Login function called:', { email });
+    console.log('Login attempt for:', { email, hasPassword: !!password });
 
     if (!email || !password) {
+      console.log('Missing email or password');
       return createResponse(400, { message: 'Email and password are required' });
     }
 
+    console.log('Looking for user with email:', email);
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found');
       return createResponse(400, { message: 'Invalid credentials' });
     }
 
+    console.log('User found:', { id: user._id, email: user.email, role: user.role, status: user.status });
+
+    console.log('Comparing passwords...');
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Password does not match');
       return createResponse(400, { message: 'Invalid credentials' });
     }
+
+    console.log('Password matches!');
 
     // Check account status
     if (user.status === 'suspended') {
