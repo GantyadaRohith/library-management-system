@@ -18,6 +18,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/create-admin"
+  to = "/.netlify/functions/create-admin"
+  status = 200
+
+[[redirects]]
   from = "/api/books/*"
   to = "/.netlify/functions/books"
   status = 200
