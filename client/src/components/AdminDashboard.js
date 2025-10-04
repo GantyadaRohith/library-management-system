@@ -16,7 +16,6 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('token');
       const [statsRes, usersRes, pendingRes] = await Promise.all([
         api.get('/api/admin/statistics'),
         api.get('/api/admin/users'),
@@ -35,10 +34,7 @@ const AdminDashboard = () => {
 
   const handleApproveLibrarian = async (userId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/admin/approve-librarian/${userId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post(`/api/admin/approve-librarian/${userId}`, {});
       
       fetchData(); // Refresh data
       alert('Librarian approved successfully!');
@@ -51,11 +47,7 @@ const AdminDashboard = () => {
     const reason = prompt('Reason for rejection (optional):');
     
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/admin/reject-librarian/${userId}`, 
-        { reason }, 
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post(`/api/admin/reject-librarian/${userId}`, { reason });
       
       fetchData(); // Refresh data
       alert('Librarian request rejected');
@@ -66,10 +58,8 @@ const AdminDashboard = () => {
 
   const handleChangeUserRole = async (userId, newRole, newStatus) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/admin/users/${userId}/role`, 
-        { role: newRole, status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
+      await api.put(`/api/admin/users/${userId}/role`, 
+        { role: newRole, status: newStatus }
       );
       
       fetchData(); // Refresh data
@@ -82,10 +72,7 @@ const AdminDashboard = () => {
   const handleDeleteUser = async (userId, userName) => {
     if (window.confirm(`Are you sure you want to delete user: ${userName}?`)) {
       try {
-        const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/admin/users/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await api.delete(`/api/admin/users/${userId}`);
         
         fetchData(); // Refresh data
         alert('User deleted successfully!');
