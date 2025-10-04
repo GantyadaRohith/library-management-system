@@ -1,4 +1,4 @@
-const { connectToDatabase, handleCors, createResponse } = require('./_utils');
+const { connectDB, corsHeaders } = require('./_utils');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -50,19 +50,32 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 exports.handler = async (event, context) => {
-  console.log('Login function started');
-  
-  // Handle CORS preflight
-  const corsResponse = handleCors(event);
-  if (corsResponse) return corsResponse;
-
-  if (event.httpMethod !== 'POST') {
-    return createResponse(405, { message: 'Method not allowed' });
-  }
+  // Set CORS headers for all responses
+  const headers = corsHeaders;
 
   try {
+    // Handle preflight requests
+    if (event.httpMethod === 'OPTIONS') {
+      return {
+        statusCode: 200,
+        headers,
+        body: ''
+      };
+    }
+
+    // Only allow POST requests
+    if (event.httpMethod !== 'POST') {
+      return {
+        statusCode: 405,
+        headers,
+        body: JSON.stringify({ error: 'Method not allowed' })
+      };
+    }
+
+    console.log('Login function started');
+    
     console.log('Connecting to database...');
-    await connectToDatabase();
+    await connectDB();
     console.log('Database connected');
 
     const body = event.body ? JSON.parse(event.body) : {};
@@ -72,14 +85,22 @@ exports.handler = async (event, context) => {
 
     if (!email || !password) {
       console.log('Missing email or password');
-      return createResponse(400, { message: 'Email and password are required' });
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Email and password are required' })
+      };
     }
 
     console.log('Looking for user with email:', email);
     const user = await User.findOne({ email });
     if (!user) {
       console.log('User not found');
-      return createResponse(400, { message: 'Invalid credentials' });
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Invalid credentials' })
+      };
     }
 
     console.log('User found:', { id: user._id, email: user.email, role: user.role, status: user.status });
@@ -88,25 +109,37 @@ exports.handler = async (event, context) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       console.log('Password does not match');
-      return createResponse(400, { message: 'Invalid credentials' });
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Invalid credentials' })
+      };
     }
 
     console.log('Password matches!');
 
     // Check account status
     if (user.status === 'suspended') {
-      return createResponse(403, { 
-        message: 'Account suspended. Contact administrator.',
-        status: 'suspended'
-      });
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({ 
+          error: 'Account suspended. Contact administrator.',
+          status: 'suspended'
+        })
+      };
     }
 
     if (user.status === 'pending') {
-      return createResponse(403, { 
-        message: 'Account pending approval. Please wait for admin approval.',
-        status: 'pending',
-        requestedRole: user.requestedRole
-      });
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({ 
+          error: 'Account pending approval. Please wait for admin approval.',
+          status: 'pending',
+          requestedRole: user.requestedRole
+        })
+      };
     }
 
     // Update last login
@@ -119,19 +152,33 @@ exports.handler = async (event, context) => {
       { expiresIn: '1d' }
     );
 
-    return createResponse(200, { 
-      token, 
-      user: { 
-        name: user.name, 
-        email: user.email, 
-        role: user.role,
-        status: user.status,
-        lastLogin: user.lastLogin
-      } 
-    });
+    console.log('Login successful, returning token');
+
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({ 
+        token, 
+        user: { 
+          name: user.name, 
+          email: user.email, 
+          role: user.role,
+          status: user.status,
+          lastLogin: user.lastLogin
+        } 
+      })
+    };
 
   } catch (error) {
     console.error('Login function error:', error);
-    return createResponse(500, { message: 'Server error' });
+    
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ 
+        error: 'Server error',
+        details: error.message 
+      })
+    };
   }
 };

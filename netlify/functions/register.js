@@ -1,4 +1,4 @@
-const { connectToDatabase, handleCors, createResponse } = require('./_utils');
+const { connectDB, corsHeaders } = require('./_utils');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
@@ -49,19 +49,32 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 exports.handler = async (event, context) => {
-  console.log('Register function started');
-  
-  // Handle CORS preflight
-  const corsResponse = handleCors(event);
-  if (corsResponse) return corsResponse;
-
-  if (event.httpMethod !== 'POST') {
-    return createResponse(405, { message: 'Method not allowed' });
-  }
+  // Set CORS headers for all responses
+  const headers = corsHeaders;
 
   try {
+    // Handle preflight requests
+    if (event.httpMethod === 'OPTIONS') {
+      return {
+        statusCode: 200,
+        headers,
+        body: ''
+      };
+    }
+
+    // Only allow POST requests
+    if (event.httpMethod !== 'POST') {
+      return {
+        statusCode: 405,
+        headers,
+        body: JSON.stringify({ error: 'Method not allowed' })
+      };
+    }
+
+    console.log('Register function started');
+    
     console.log('Connecting to database...');
-    await connectToDatabase();
+    await connectDB();
     console.log('Database connected');
 
     const body = event.body ? JSON.parse(event.body) : {};
@@ -72,24 +85,24 @@ exports.handler = async (event, context) => {
     // Basic validation
     if (!name || !email || !password || !role) {
       console.log('Validation failed: missing fields');
-      return createResponse(400, { message: 'All fields are required' });
+      return { statusCode: , headers, body: JSON.stringify({ error:  }) };
     }
 
     if (password.length < 6) {
       console.log('Validation failed: password too short');
-      return createResponse(400, { message: 'Password must be at least 6 characters' });
+      return { statusCode: , headers, body: JSON.stringify({ error:  }) };
     }
 
     if (!['student', 'librarian'].includes(role)) {
       console.log('Validation failed: invalid role');
-      return createResponse(400, { message: 'Invalid role selected' });
+      return { statusCode: , headers, body: JSON.stringify({ error:  }) };
     }
 
     console.log('Checking for existing user...');
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log('User already exists');
-      return createResponse(400, { message: 'Email already exists' });
+      return { statusCode: , headers, body: JSON.stringify({ error:  }) };
     }
 
     console.log('Hashing password...');
