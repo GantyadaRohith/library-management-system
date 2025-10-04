@@ -1,6 +1,27 @@
-const { connectToDatabase, handleCors, createResponse } = require('./_utils');
+const { connectDB, corsHeaders } = require('./_utils');
 const jwt = require('jsonwebtoken');
-const Book = require('./models/Book');
+const mongoose = require('mongoose');
+
+// Book schema (local definition)
+const BookSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  author: { type: String, required: true },
+  isbn: { type: String, required: true, unique: true },
+  category: { type: String, required: true },
+  totalCopies: { type: Number, required: true, min: 1 },
+  availableCopies: { type: Number, required: true, min: 0 },
+  description: String,
+  publishedYear: Number,
+  addedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  addedAt: { type: Date, default: Date.now }
+});
+
+let Book;
+try {
+  Book = mongoose.model('Book');
+} catch {
+  Book = mongoose.model('Book', BookSchema);
+}
 
 // Authentication middleware
 const authenticateToken = (token) => {
@@ -15,20 +36,32 @@ const authenticateToken = (token) => {
 };
 
 exports.handler = async (event, context) => {
-  console.log('Add book function called');
-  
-  // Handle CORS preflight
-  const corsResponse = handleCors(event);
-  if (corsResponse) return corsResponse;
-
-  if (event.httpMethod !== 'POST') {
-    return createResponse(405, { message: 'Method not allowed' });
-  }
+  // Set CORS headers for all responses
+  const headers = corsHeaders;
 
   try {
-    console.log('Connecting to database...');
-    await connectToDatabase();
-    console.log('Database connected');
+    // Handle preflight requests
+    if (event.httpMethod === 'OPTIONS') {
+      return {
+        statusCode: 200,
+        headers,
+        body: ''
+      };
+    }
+
+    // Only allow POST requests
+    if (event.httpMethod !== 'POST') {
+      return {
+        statusCode: 405,
+        headers,
+        body: JSON.stringify({ error: 'Method not allowed' })
+      };
+    }
+
+    console.log('Add book function called');
+
+    // Connect to database
+    await connectDB();
 
     // Get auth token
     const authHeader = event.headers.authorization || event.headers.Authorization;
@@ -41,55 +74,89 @@ exports.handler = async (event, context) => {
       }
     } catch (error) {
       console.log('Authentication failed:', error.message);
-      return createResponse(401, { message: 'Authentication required' });
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({ error: 'Authentication required' })
+      };
     }
 
     if (!user) {
-      return createResponse(401, { message: 'Authentication required' });
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({ error: 'Authentication required' })
+      };
     }
 
     if (user.role !== 'librarian') {
-      return createResponse(403, { message: 'Librarian access required' });
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({ error: 'Librarian access required' })
+      };
     }
 
     console.log('User authenticated:', { userId: user.userId, role: user.role });
 
     const body = event.body ? JSON.parse(event.body) : {};
-    const { title, author, isbn, genre, description, publishedYear, pages, language, publisher } = body;
+    const { title, author, isbn, category, totalCopies, description, publishedYear } = body;
 
-    console.log('Adding book:', { title, author });
+    console.log('Adding book:', { title, author, category });
 
-    if (!title || !author) {
-      return createResponse(400, { message: 'Title and author are required' });
+    if (!title || !author || !isbn || !category || !totalCopies) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Title, author, ISBN, category, and total copies are required' })
+      };
+    }
+
+    // Check if book already exists
+    const existingBook = await Book.findOne({ isbn });
+    if (existingBook) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'Book with this ISBN already exists' })
+      };
     }
 
     const book = new Book({
       title,
       author,
       isbn,
-      genre,
+      category,
+      totalCopies: parseInt(totalCopies),
+      availableCopies: parseInt(totalCopies),
       description,
-      publishedYear,
-      pages,
-      language,
-      publisher,
-      available: true,
+      publishedYear: publishedYear ? parseInt(publishedYear) : undefined,
+      addedBy: user.userId,
       addedAt: new Date()
     });
 
     await book.save();
     console.log('Book saved successfully:', book._id);
 
-    return createResponse(201, {
-      message: 'Book added successfully',
-      book: book
-    });
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify({
+        message: 'Book added successfully',
+        book: book
+      })
+    };
 
   } catch (error) {
     console.error('Add book function error:', error);
-    return createResponse(500, { 
-      message: 'Server error', 
-      error: error.message 
-    });
+    
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ 
+        error: 'Failed to add book',
+        details: error.message 
+      })
+    };
   }
 };

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? process.env.REACT_APP_API_URL || window.location.origin
-  : 'http://localhost:5000';
+  : process.env.REACT_APP_NETLIFY_DEV ? '/.netlify/functions' : window.location.origin;
 
 // Create axios instance with base configuration
 const api = axios.create({

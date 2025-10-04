@@ -23,9 +23,21 @@
   status = 200
 
 [[redirects]]
+  from = "/api/books/filters/options"
+  to = "/.netlify/functions/get-filter-options"
+  status = 200
+
+[[redirects]]
   from = "/api/books"
   to = "/.netlify/functions/get-books"
   status = 200
+  conditions = {methods = ["GET"]}
+
+[[redirects]]
+  from = "/api/books"
+  to = "/.netlify/functions/add-book"
+  status = 200
+  conditions = {methods = ["POST"]}
 
 [[redirects]]
   from = "/api/books/add"
