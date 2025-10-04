@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import styles from './SearchBar.module.css';
 
 function SearchBar({ onSearch, value, placeholder = "Search books by title, author, ISBN..." }) {
@@ -24,10 +24,7 @@ function SearchBar({ onSearch, value, placeholder = "Search books by title, auth
 
     try {
       setIsLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/books/search/suggestions?q=${encodeURIComponent(query)}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`/api/books/search/suggestions?q=${encodeURIComponent(query)}`);
       setSuggestions(response.data);
       setShowSuggestions(response.data.length > 0);
     } catch (error) {

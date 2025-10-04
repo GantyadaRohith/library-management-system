@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import styles from './AdminDashboard.module.css';
 
 const AdminDashboard = () => {
@@ -17,12 +17,10 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
-
       const [statsRes, usersRes, pendingRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/admin/statistics', { headers }),
-        axios.get('http://localhost:5000/api/admin/users', { headers }),
-        axios.get('http://localhost:5000/api/admin/pending-librarians', { headers })
+        api.get('/api/admin/statistics'),
+        api.get('/api/admin/users'),
+        api.get('/api/admin/pending-librarians')
       ]);
 
       setStatistics(statsRes.data);

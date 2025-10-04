@@ -5,15 +5,18 @@
     "build": "cd client && npm install && npm run build",
     "build:netlify": "cd client && npm ci && npx react-scripts build",
     "start": "cd client && npm start",
+    "start:server": "cd server && npm run dev",
+    "start:client": "cd client && npm start",
+    "dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
     "install-functions": "npm install",
     "install-all": "npm run install-client && npm run install-server && npm run install-functions",
     "dev:netlify": "netlify dev",
-    "dev": "concurrently \"npm run start\" \"npm run dev:netlify\"",
     "deploy": "git add -A && git commit -m \"Auto deploy $(date)\" && git push",
     "test:api": "node test-api.js",
-    "quick-deploy": "echo 'Making quick change...' && echo // Updated at $(date) >> client/src/App.js && npm run deploy"
+    "quick-deploy": "echo 'Making quick change...' && echo // Updated at $(date) >> client/src/App.js && npm run deploy",
+    "setup": "npm run install-all"
   },
   "workspaces": [
     "client",

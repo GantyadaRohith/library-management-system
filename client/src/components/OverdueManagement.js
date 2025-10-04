@@ -17,13 +17,11 @@ function OverdueManagement({ user, showToast }) {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
 
       const [overdueRes, dueSoonRes, statsRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/requests/overdue', { headers }),
-        axios.get('http://localhost:5000/api/requests/due-soon', { headers }),
-        axios.get('http://localhost:5000/api/requests/statistics', { headers })
+        api.get('/api/requests/overdue'),
+        api.get('/api/requests/due-soon'),
+        api.get('/api/requests/statistics')
       ]);
 
       setOverdueBooks(overdueRes.data);
@@ -40,13 +38,10 @@ function OverdueManagement({ user, showToast }) {
   const sendReminder = async (requestId, reminderType = 'overdue') => {
     try {
       setSendingReminder(requestId);
-      const token = localStorage.getItem('token');
       
-      await axios.post('http://localhost:5000/api/requests/send-reminder', {
+      await api.post('/api/requests/send-reminder', {
         requestId,
         reminderType
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (showToast) showToast('Reminder sent successfully!');
@@ -63,10 +58,7 @@ function OverdueManagement({ user, showToast }) {
 
   const updateOverdueStatuses = async () => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/requests/update-overdue', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post('/api/requests/update-overdue', {});
 
       if (showToast) showToast('Overdue statuses updated!');
       fetchData();
@@ -78,10 +70,7 @@ function OverdueManagement({ user, showToast }) {
 
   const processAllReminders = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/requests/process-reminders', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.post('/api/requests/process-reminders', {});
 
       const summary = response.data.summary;
       const totalSent = summary.beforeDue + summary.dueToday + summary.overdue;
