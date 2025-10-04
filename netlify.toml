@@ -23,6 +23,26 @@
   status = 200
 
 [[redirects]]
+  from = "/api/books"
+  to = "/.netlify/functions/get-books"
+  status = 200
+
+[[redirects]]
+  from = "/api/books/add"
+  to = "/.netlify/functions/add-book"
+  status = 200
+
+[[redirects]]
+  from = "/api/requests"
+  to = "/.netlify/functions/get-requests"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/overdue"
+  to = "/.netlify/functions/get-overdue"
+  status = 200
+
+[[redirects]]
   from = "/api/books/*"
   to = "/.netlify/functions/books"
   status = 200
