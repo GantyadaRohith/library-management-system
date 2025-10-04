@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import AddBook from './AddBook';
 import BookCard from './BookCard';
 import BookModal from './BookModal';
@@ -47,9 +47,7 @@ function BookList({ user, showToast }) {
       if (searchFilters.page) params.append('page', searchFilters.page);
       if (searchFilters.limit) params.append('limit', searchFilters.limit);
 
-      const response = await axios.get(`http://localhost:5000/api/books?${params}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`/api/books?${params}`);
 
       // Handle both old format (array) and new format (object with books and pagination)
       if (Array.isArray(response.data)) {
@@ -79,10 +77,8 @@ function BookList({ user, showToast }) {
   const requestBook = async (bookId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/requests', {
+      await api.post('/api/requests', {
         bookId
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
       if (showToast) showToast('Request sent!');
     } catch (err) {

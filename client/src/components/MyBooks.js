@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import DueDateInfo from './DueDateInfo';
 
 function MyBooks({ user, showToast }) {
@@ -13,9 +13,7 @@ function MyBooks({ user, showToast }) {
   const fetchMyRequests = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/requests/my-requests', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/requests/my-requests');
       setMyRequests(response.data);
     } catch (err) {
       if (showToast) showToast('Failed to fetch your requests');

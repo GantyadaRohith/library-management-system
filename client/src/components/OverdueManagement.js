@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import DueDateInfo from './DueDateInfo';
 import styles from './OverdueManagement.module.css';
 

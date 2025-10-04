@@ -1,31 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import RequestCard from './RequestCard';
 
 function RequestQueue({ user, showToast }) {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    axios.get('http://localhost:5000/api/requests', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    api.get('/api/requests')
       .then(res => setRequests(res.data))
       .catch(() => setRequests([]));
   }, []);
 
   const acceptRequest = async (requestId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/requests/accept', 
-        { requestId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post('/api/requests/accept', { requestId });
       if (showToast) showToast('Request accepted!');
       // Refresh the requests list
-      const updatedRes = await axios.get('http://localhost:5000/api/requests', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const updatedRes = await api.get('/api/requests');
       setRequests(updatedRes.data);
     } catch (err) {
       if (showToast) showToast(err.response?.data?.message || 'Failed to accept request');
@@ -34,11 +25,7 @@ function RequestQueue({ user, showToast }) {
 
   const notifyStudent = async (requestId) => {
     try {
-      const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/requests/notify', 
-        { requestId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post('/api/requests/notify', { requestId });
       if (showToast) showToast('Email sent!');
     } catch (err) {
       if (showToast) showToast(err.response?.data?.message || 'Failed to send email');
@@ -48,25 +35,14 @@ function RequestQueue({ user, showToast }) {
   const returnBook = async (requestId) => {
     try {
       console.log('Attempting to return book with requestId:', requestId);
-      const token = localStorage.getItem('token');
       
-      if (!token) {
-        if (showToast) showToast('Authentication token not found. Please login again.');
-        return;
-      }
-      
-      const response = await axios.post('http://localhost:5000/api/requests/return', 
-        { requestId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.post('/api/requests/return', { requestId });
       
       console.log('Return response:', response.data);
       if (showToast) showToast('Book returned successfully!');
       
       // Refresh the requests list
-      const updatedRes = await axios.get('http://localhost:5000/api/requests', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const updatedRes = await api.get('/api/requests');
       setRequests(updatedRes.data);
     } catch (err) {
       console.error('Return book error:', err);
