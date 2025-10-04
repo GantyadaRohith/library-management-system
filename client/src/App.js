@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Toast from './components/Toast';
 import Login from './components/Login';
 import Register from './components/Register';
+// Auto-deployment test - Updated at 2025-10-04
 import BookList from './components/BookList';
 import RequestQueue from './components/RequestQueue';
 import MyBooks from './components/MyBooks';

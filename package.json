@@ -9,7 +9,11 @@
     "install-server": "cd server && npm install",
     "install-functions": "npm install",
     "install-all": "npm run install-client && npm run install-server && npm run install-functions",
-    "dev:netlify": "netlify dev"
+    "dev:netlify": "netlify dev",
+    "dev": "concurrently \"npm run start\" \"npm run dev:netlify\"",
+    "deploy": "git add -A && git commit -m \"Auto deploy $(date)\" && git push",
+    "test:api": "node test-api.js",
+    "quick-deploy": "echo 'Making quick change...' && echo // Updated at $(date) >> client/src/App.js && npm run deploy"
   },
   "workspaces": [
     "client",
@@ -23,6 +27,7 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
-    "netlify-cli": "^16.0.0"
+    "netlify-cli": "^16.0.0",
+    "concurrently": "^8.2.2"
   }
 }
