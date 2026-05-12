@@ -178,4 +178,23 @@ router.post('/', authenticateToken, requireRole('librarian'), validateBook, asyn
   }
 });
 
+// Librarian/Admin: Delete a book
+router.delete('/:id', authenticateToken, async (req, res) => {
+  try {
+    // Check if user has librarian or admin role
+    if (req.user.role !== 'librarian' && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Insufficient permissions' });
+    }
+
+    const book = await Book.findByIdAndDelete(req.params.id);
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' });
+    }
+    res.json({ message: 'Book deleted successfully' });
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

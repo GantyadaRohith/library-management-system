@@ -86,6 +86,21 @@ function BookList({ user, showToast }) {
     }
   };
 
+  const deleteBook = async (bookId) => {
+    try {
+      await api.delete(`/api/books/${bookId}`);
+      if (showToast) showToast('Book deleted successfully');
+      // Refresh books list
+      fetchBooks(filters);
+      // Close modal if it's the deleted book
+      if (selectedBook?._id === bookId) {
+        handleCloseModal();
+      }
+    } catch (err) {
+      if (showToast) showToast(err.response?.data?.message || 'Failed to delete book');
+    }
+  };
+
   const handleAddBook = () => {
     fetchBooks();
   };
@@ -126,25 +141,37 @@ function BookList({ user, showToast }) {
   };
 
   return (
-    <div className="card">
-      <h2 className="form-title">
-        {filters.search || filters.genre !== 'all' || filters.author !== 'all' || filters.language !== 'all' 
-          ? 'Search Results' 
+    <div className="card book-view">
+      <div className="book-view-header">
+        <div>
+      <h2 className="form-title book-view-title">
+        {filters.search || filters.genre !== 'all' || filters.author !== 'all' || filters.language !== 'all'
+          ? 'Search Results'
           : 'Available Books'}
       </h2>
-      
+          <p className="book-view-subtitle">
+            Browse the collection, filter by relevance, and open any title for the full record.
+          </p>
+        </div>
+        {pagination.totalBooks !== undefined && (
+          <div className="book-results-pill">
+            {loading ? 'Searching...' : `${pagination.totalBooks} books`}
+          </div>
+        )}
+      </div>
+
       {user?.role === 'librarian' && (
         <AddBook onAdd={handleAddBook} showToast={showToast} />
       )}
 
       {/* Search and Filter Controls */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <SearchBar 
+      <div className="book-controls">
+        <SearchBar
           onSearch={handleSearch}
           value={filters.search}
           placeholder="Search books by title, author, ISBN, or description..."
         />
-        
+
         <FilterPanel
           filters={filters}
           onFiltersChange={handleFiltersChange}
@@ -153,36 +180,15 @@ function BookList({ user, showToast }) {
           onToggleExpanded={() => setIsFiltersExpanded(!isFiltersExpanded)}
         />
       </div>
-      
+
       {error && <div className="alert alert-error">{error}</div>}
 
-      {/* Results Summary */}
-      {pagination.totalBooks !== undefined && (
-        <div style={{ 
-          marginBottom: '1rem', 
-          padding: '0.75rem', 
-          background: 'var(--gray-50, #F9FAFB)',
-          borderRadius: '6px',
-          fontSize: '0.875rem',
-          color: 'var(--gray-700, #374151)'
-        }}>
-          {loading ? (
-            'Searching...'
-          ) : (
-            `Found ${pagination.totalBooks} book${pagination.totalBooks !== 1 ? 's' : ''}`
-          )}
-        </div>
-      )}
-      
       {/* Loading State */}
       {loading && (
-        <div style={{ 
-          textAlign: 'center', 
-          padding: '2rem',
-          color: 'var(--gray-500, #6B7280)'
-        }}>
-          <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📚</div>
-          Loading books...
+        <div className="book-loading">
+          <div className="book-loading-icon">📚</div>
+          <div className="book-loading-title">Loading books...</div>
+          <div className="book-loading-copy">Fetching titles and filters from the collection.</div>
         </div>
       )}
 
@@ -190,21 +196,14 @@ function BookList({ user, showToast }) {
       {!loading && (
         <div className="book-grid">
           {books.length === 0 ? (
-            <div style={{ 
-              textAlign: 'center', 
-              color: 'var(--gray-500, #6B7280)', 
-              padding: '3rem 2rem',
-              background: 'var(--gray-50, #F9FAFB)',
-              borderRadius: '12px',
-              border: '2px dashed var(--border-color, #e1e5e9)'
-            }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📖</div>
-              <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--gray-600, #4B5563)' }}>
+            <div className="book-empty">
+              <div className="book-empty-icon">📖</div>
+              <h3 className="book-empty-title">
                 {filters.search || filters.genre !== 'all' || filters.author !== 'all' || filters.language !== 'all'
                   ? 'No books match your search'
                   : 'No books available'}
               </h3>
-              <p style={{ margin: 0 }}>
+              <p className="book-empty-copy">
                 {filters.search || filters.genre !== 'all' || filters.author !== 'all' || filters.language !== 'all'
                   ? 'Try adjusting your search terms or filters'
                   : 'Check back later for new additions'}
@@ -212,12 +211,13 @@ function BookList({ user, showToast }) {
             </div>
           ) : (
             books.map(book => (
-              <BookCard 
-                key={book._id} 
-                book={book} 
-                user={user} 
+              <BookCard
+                key={book._id}
+                book={book}
+                user={user}
                 onRequest={requestBook}
                 onBookClick={handleBookClick}
+                onDelete={deleteBook}
               />
             ))
           )}
@@ -226,63 +226,36 @@ function BookList({ user, showToast }) {
 
       {/* Pagination */}
       {!loading && pagination.totalPages > 1 && (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '1rem',
-          marginTop: '2rem',
-          padding: '1rem',
-          background: 'var(--gray-50, #F9FAFB)',
-          borderRadius: '8px'
-        }}>
+        <div className="book-pagination">
           <button
             onClick={() => handlePageChange(filters.page - 1)}
             disabled={!pagination.hasPrevPage}
-            style={{
-              padding: '0.5rem 1rem',
-              border: '1px solid var(--border-color, #e1e5e9)',
-              background: pagination.hasPrevPage ? 'white' : 'var(--gray-100, #F3F4F6)',
-              color: pagination.hasPrevPage ? 'var(--text-color, #333)' : 'var(--gray-400, #9CA3AF)',
-              borderRadius: '6px',
-              cursor: pagination.hasPrevPage ? 'pointer' : 'not-allowed'
-            }}
+            className={`book-page-button ${pagination.hasPrevPage ? 'book-page-button-active' : 'book-page-button-disabled'}`}
           >
             ← Previous
           </button>
-          
-          <span style={{ 
-            fontSize: '0.875rem', 
-            color: 'var(--gray-600, #4B5563)',
-            minWidth: '120px',
-            textAlign: 'center'
-          }}>
+
+          <span className="book-page-indicator">
             Page {pagination.currentPage} of {pagination.totalPages}
           </span>
-          
+
           <button
             onClick={() => handlePageChange(filters.page + 1)}
             disabled={!pagination.hasNextPage}
-            style={{
-              padding: '0.5rem 1rem',
-              border: '1px solid var(--border-color, #e1e5e9)',
-              background: pagination.hasNextPage ? 'white' : 'var(--gray-100, #F3F4F6)',
-              color: pagination.hasNextPage ? 'var(--text-color, #333)' : 'var(--gray-400, #9CA3AF)',
-              borderRadius: '6px',
-              cursor: pagination.hasNextPage ? 'pointer' : 'not-allowed'
-            }}
+            className={`book-page-button ${pagination.hasNextPage ? 'book-page-button-active' : 'book-page-button-disabled'}`}
           >
             Next →
           </button>
         </div>
       )}
-      
-      <BookModal 
+
+      <BookModal
         book={selectedBook}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         user={user}
         onRequest={requestBook}
+        onDelete={deleteBook}
       />
     </div>
   );

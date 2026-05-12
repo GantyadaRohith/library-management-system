@@ -51,10 +51,13 @@ function AddBook({ onAdd, showToast }) {
   return (
     <div className="add-book-form">
       <h3 className="form-title">Add New Book</h3>
-      <form onSubmit={handleSubmit}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <div className="form-group">
+      <p className="field-help">Capture just enough detail to help students find and request the right title.</p>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="field-label" htmlFor="book-title">Book Title</label>
             <input
+              id="book-title"
               className="form-input"
               type="text"
               placeholder="Book Title *"
@@ -63,9 +66,11 @@ function AddBook({ onAdd, showToast }) {
               required
             />
           </div>
-          
-          <div className="form-group">
+
+          <div>
+            <label className="field-label" htmlFor="book-author">Author</label>
             <input
+              id="book-author"
               className="form-input"
               type="text"
               placeholder="Author Name *"
@@ -75,21 +80,24 @@ function AddBook({ onAdd, showToast }) {
             />
           </div>
         </div>
-        
-        <div className="form-group">
+
+        <div>
+          <label className="field-label" htmlFor="book-description">Description</label>
           <textarea
+            id="book-description"
             className="form-input"
             placeholder="Book Description"
             value={description}
             onChange={e => setDescription(e.target.value)}
             rows="3"
-            style={{ resize: 'vertical' }}
           />
         </div>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-          <div className="form-group">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="field-label" htmlFor="book-isbn">ISBN</label>
             <input
+              id="book-isbn"
               className="form-input"
               type="text"
               placeholder="ISBN"
@@ -97,9 +105,11 @@ function AddBook({ onAdd, showToast }) {
               onChange={e => setIsbn(e.target.value)}
             />
           </div>
-          
-          <div className="form-group">
+
+          <div>
+            <label className="field-label" htmlFor="book-year">Published Year</label>
             <input
+              id="book-year"
               className="form-input"
               type="number"
               placeholder="Published Year"
@@ -109,9 +119,11 @@ function AddBook({ onAdd, showToast }) {
               max={new Date().getFullYear()}
             />
           </div>
-          
-          <div className="form-group">
+
+          <div>
+            <label className="field-label" htmlFor="book-genre">Genre</label>
             <select
+              id="book-genre"
               className="form-input"
               value={genre}
               onChange={e => setGenre(e.target.value)}
@@ -131,10 +143,12 @@ function AddBook({ onAdd, showToast }) {
             </select>
           </div>
         </div>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          <div className="form-group">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="field-label" htmlFor="book-pages">Pages</label>
             <input
+              id="book-pages"
               className="form-input"
               type="number"
               placeholder="Number of Pages"
@@ -143,9 +157,11 @@ function AddBook({ onAdd, showToast }) {
               min="1"
             />
           </div>
-          
-          <div className="form-group">
+
+          <div>
+            <label className="field-label" htmlFor="book-publisher">Publisher</label>
             <input
+              id="book-publisher"
               className="form-input"
               type="text"
               placeholder="Publisher"
@@ -154,8 +170,8 @@ function AddBook({ onAdd, showToast }) {
             />
           </div>
         </div>
-        
-        <button className="btn" type="submit" disabled={loading}>
+
+        <button className="btn add-book-submit-btn" type="submit" disabled={loading}>
           {loading ? 'Adding...' : 'Add Book'}
         </button>
       </form>

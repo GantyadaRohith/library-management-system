@@ -1,10 +1,12 @@
 /* FilterPanel Styles */
 .filterPanel {
-  background: white;
-  border: 1px solid var(--border-color, #e1e5e9);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 18px;
   margin-bottom: 1.5rem;
   overflow: hidden;
+  box-shadow: 0 18px 44px rgb(15 23 42 / 0.08);
+  backdrop-filter: blur(12px);
 }
 
 .filterHeader {
@@ -12,8 +14,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
-  background: var(--gray-50, #F9FAFB);
-  border-bottom: 1px solid var(--border-color, #e1e5e9);
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.92));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
 }
 
 .toggleButton {
@@ -21,7 +23,7 @@
   border: none;
   font-size: 16px;
   font-weight: 500;
-  color: var(--text-color, #333);
+  color: #0f172a;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -31,31 +33,32 @@
 }
 
 .toggleButton:hover {
-  color: var(--primary-color, #4A90E2);
+  color: #4f46e5;
 }
 
 .toggleButton.expanded {
-  color: var(--primary-color, #4A90E2);
+  color: #4f46e5;
 }
 
 .clearButton {
-  background: var(--danger-color, #EF4444);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.55rem 1rem;
+  border-radius: 9999px;
   font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  box-shadow: 0 10px 24px rgb(239 68 68 / 0.22);
 }
 
 .clearButton:hover {
-  background: var(--danger-color-dark, #DC2626);
+  filter: brightness(1.03);
 }
 
 .loading {
   padding: 1rem 1.25rem;
-  color: var(--gray-500, #6B7280);
+  color: #64748b;
   text-align: center;
 }
 
@@ -75,7 +78,7 @@
   margin: 0 0 1rem 0;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text-color, #333);
+  color: #0f172a;
 }
 
 .filterGrid {
@@ -92,29 +95,30 @@
 .filterLabel {
   margin-bottom: 0.5rem;
   font-weight: 500;
-  color: var(--text-color, #333);
+  color: #334155;
   font-size: 0.875rem;
 }
 
 .filterSelect {
-  padding: 0.75rem;
-  border: 1px solid var(--border-color, #e1e5e9);
-  border-radius: 6px;
-  background: white;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
   font-size: 0.875rem;
-  color: var(--text-color, #333);
+  color: #0f172a;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: inset 0 1px 2px rgb(15 23 42 / 0.03);
 }
 
 .filterSelect:focus {
   outline: none;
-  border-color: var(--primary-color, #4A90E2);
-  box-shadow: 0 0 0 3px var(--primary-color-alpha, rgba(74, 144, 226, 0.1));
+  border-color: rgba(79, 70, 229, 0.42);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
 }
 
 .filterSelect:hover {
-  border-color: var(--gray-400, #9CA3AF);
+  border-color: rgba(100, 116, 139, 0.55);
 }
 
 /* Sort Controls */

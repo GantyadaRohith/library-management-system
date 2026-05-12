@@ -5,7 +5,6 @@ A full-stack application for managing library books, requests, and user accounts
 ## 🏗️ Structure
 - `/client`: React frontend
 - `/server`: Express backend (local development)
-- `/api`: Serverless functions for Vercel deployment
 - MongoDB: Database
 
 ## ✨ Features
@@ -16,17 +15,11 @@ A full-stack application for managing library books, requests, and user accounts
 - Email notifications for overdue books
 - Responsive design
 
-## 🚀 Quick Deploy to Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/library-management-system)
-
-**See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.**
-
 ## 🛠️ Local Development
 
 1. **Install dependencies**:
    ```bash
-   npm run install-all
+   npm run setup
    ```
 
 2. **Configure environment**:
@@ -44,15 +37,10 @@ A full-stack application for managing library books, requests, and user accounts
 
 ## 📋 Environment Variables
 
-See [ENVIRONMENT.md](./ENVIRONMENT.md) for complete environment variable documentation.
+See [server/.env.example](server/.env.example) for the local environment template.
 
 ## 📚 Documentation
 
-- [Deployment Guide](./DEPLOYMENT.md) - Deploy to Vercel
-- [Environment Setup](./ENVIRONMENT.md) - Environment variables
 - [Client Documentation](./client/README.md) - Frontend details
 - [Server Documentation](./server/README.md) - Backend details
-
----
-
-**Ready to deploy?** Follow the [deployment guide](./DEPLOYMENT.md) to get your app live on Vercel in minutes!
+- [Software Requirements Specification (SRS)](./SRS.md) - Detailed requirements

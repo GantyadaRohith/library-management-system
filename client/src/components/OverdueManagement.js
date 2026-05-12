@@ -119,7 +119,7 @@ function OverdueManagement({ user, showToast }) {
         </div>
         
         <div className={`${styles.statCard} ${styles.danger}`}>
-          <div className={styles.statNumber}>${statistics.totalLateFees || '0.00'}</div>
+          <div className={styles.statNumber}>₹{Math.round(statistics.totalLateFees || 0)}</div>
           <div className={styles.statLabel}>Total Late Fees</div>
         </div>
       </div>
@@ -147,7 +147,7 @@ function OverdueManagement({ user, showToast }) {
           <strong>Loan Period:</strong> {statistics.loanPeriodDays || 14} days
         </div>
         <div className={styles.configItem}>
-          <strong>Late Fee:</strong> ${statistics.lateFeePerDay || '0.50'}/day (max ${statistics.maxLateFee || '15.00'})
+          <strong>Late Fee:</strong> ₹{Math.round(statistics.lateFeePerDay || 10)}/day (max ₹{Math.round(statistics.maxLateFee || 100)})
         </div>
       </div>
 

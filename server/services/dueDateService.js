@@ -3,8 +3,8 @@ const nodemailer = require('nodemailer');
 
 // Configuration constants from environment variables
 const LOAN_DAYS = parseInt(process.env.LOAN_DAYS) || 14; // Default loan period in days
-const LATE_FEE_PER_DAY = parseFloat(process.env.LATE_FEE_PER_DAY) || 0.50; // Late fee per day in dollars
-const MAX_LATE_FEE = parseFloat(process.env.MAX_LATE_FEE) || 15.00; // Maximum late fee cap
+const LATE_FEE_PER_DAY = parseFloat(process.env.LATE_FEE_PER_DAY) || 10; // Late fee per day in rupees
+const MAX_LATE_FEE = parseFloat(process.env.MAX_LATE_FEE) || 100.00; // Maximum late fee cap
 const REMINDER_DAYS_BEFORE = parseInt(process.env.REMINDER_DAYS_BEFORE) || 3; // Send reminder 3 days before due date
 
 /**
@@ -246,25 +246,25 @@ Library Management System`;
       break;
 
     case 'overdue':
-      const daysOverdue = request.daysOverdue;
-      const lateFee = request.lateFee.toFixed(2);
-      subject = `Library Overdue Notice: "${book.title}" - ${daysOverdue} day(s) overdue`;
-      message = `Dear ${student.name},
+  const daysOverdue = request.daysOverdue;
+  const lateFee = Math.min(request.lateFee, MAX_LATE_FEE);
+  subject = `Library Overdue Notice: "${book.title}" - ${daysOverdue} day(s) overdue`;
+  message = `Dear ${student.name},
 
 Your borrowed book is now overdue:
 
 📚 Book: "${book.title}" by ${book.author}
 📅 Due Date: ${dueDate}
 ⏰ Days Overdue: ${daysOverdue}
-💰 Current Late Fee: $${lateFee}
+💰 Current Late Fee: ₹${Number(lateFee).toFixed(0)}
 
-Please return the book as soon as possible. Late fees accrue at $${LATE_FEE_PER_DAY}/day up to a maximum of $${MAX_LATE_FEE}.
+Please return the book as soon as possible. Late fees accrue at ₹${Number(LATE_FEE_PER_DAY).toFixed(0)}/day up to a maximum of ₹${Number(MAX_LATE_FEE).toFixed(0)}.
 
 Contact the library if you have any questions.
 
 Thank you!
 Library Management System`;
-      break;
+  break;
 
     default:
       return false;

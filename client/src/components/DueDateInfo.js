@@ -73,7 +73,7 @@ function DueDateInfo({ request, showDetails = false }) {
             <div className={styles.detailRow}>
               <span className={styles.label}>Late Fee:</span>
               <span className={`${styles.value} ${styles.lateFee}`}>
-                ${request.lateFee.toFixed(2)}
+                ₹{Math.round(request.lateFee)}
               </span>
             </div>
           )}

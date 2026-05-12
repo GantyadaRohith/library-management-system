@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL || 'https://your-app-name.vercel.app'] 
+    ? [process.env.FRONTEND_URL || 'http://localhost:3000'] 
     : ['http://localhost:3000'],
   credentials: true
 }));
@@ -43,7 +43,7 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       // Continue without scheduler if there's an error
     }
   })
-  .catch(err => {
+    .catch(err => {
     console.error('MongoDB connection error:', err);
     process.exit(1);
   });
