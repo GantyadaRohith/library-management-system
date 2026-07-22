@@ -7,10 +7,12 @@ const app = express();
 
 // Security middleware
 app.use(express.json({ limit: '10mb' }));
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? (process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(o => o.trim()) : ['http://localhost:3000'])
+  : ['http://localhost:3000'];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL || 'http://localhost:3000'] 
-    : ['http://localhost:3000'],
+  origin: allowedOrigins,
   credentials: true
 }));
 
